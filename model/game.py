@@ -15,6 +15,7 @@ class Game(Subject):
         self.observers = list()
 
         self.initial_placement(dimension)
+        self.notify()
 
 
     def attach(self, observer):
@@ -113,22 +114,3 @@ class Game(Subject):
         self.change_player()
 
         self.notify()
-        # self.print_board()
-
-
-    def print_board(self):
-        available_moves = self.get_available_moves()
-        print(available_moves)
-        for i in range(len(self.board)):
-            for j in range(len(self.board)):
-                if (i, j) in available_moves:
-                    print("X", end = "")
-                else:
-                    out = 0
-                    if self.board[i][j] == Cell.BLACK:
-                        out = 2
-                    elif self.board[i][j] == Cell.WHITE:
-                        out = 1
-                    print(out, end="")
-            print()
-        print()
