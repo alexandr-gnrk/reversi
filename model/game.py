@@ -3,7 +3,7 @@ from cell import Cell
 
 class Game:
 
-    def __init__(self, player1, player2, dimension=4):
+    def __init__(self, player1, player2, dimension=8):
         self.board = []
         self.current_player = player1
         self.another_player = player2
