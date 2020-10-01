@@ -1,40 +1,39 @@
 import itertools
 from .cell import Cell
 from .subject import Subject
+from .gameevent import GameEvent
 
 class Game(Subject):
 
-    def __init__(self, player1, player2, dimension=8):
+    def __init__(self, player1, player2):
+        self.DIMENSION = 4
         self.board = list()
         self.current_player = player1
         self.another_player = player2
         self.current_player.color = Cell.BLACK
         self.another_player.color = Cell.WHITE
         self.winner = None
-        
-        self.observers = list()
+        self.is_game_over = False
 
-        self.initial_placement(dimension)
+        self.observers = list()
 
         
     def attach(self, observer):
         self.observers.append(observer)
-        self.notify()
-
 
 
     def detach(self, observer):
         self.observers.remove(observer)
 
 
-    def notify(self):
+    def notify(self, event):
         for observer in self.observers:
-            observer.update(self)
+            observer.update(self, event)
 
-    def notify_end(self):
-        for observer in self.observers:
-            observer.game_over(self)
 
+    def start(self):
+        self.initial_placement(self.DIMENSION)
+        self.notify(GameEvent.GAME_STARTED)
 
     def initial_placement(self, dimension):
         for i in range(dimension):
@@ -117,22 +116,24 @@ class Game(Subject):
         self.board[i][j] = self.current_player.color
         self.current_player.inc_point()
         self.change_player()
-        self.notify()
+        self.notify(GameEvent.FIELD_UPDATED)
         if not self.get_available_moves():
+            self.notify(GameEvent.PLAYER_PASSES)
             self.change_player()
-            self.notify()
-            #notify PASS            
-        self.check_end_game()
+            self.notify(GameEvent.FIELD_UPDATED)
 
-
-    def check_end_game(self):
-        if not self.get_available_moves():
+        if self.is_end_game():
             self.end_game()
+
+    def is_end_game(self):
+        if not self.get_available_moves():
+            return True
             
     def end_game(self):
         if self.current_player.get_point() > self.another_player.get_point():
             self.winner = self.current_player
         elif self.current_player.get_point() < self.another_player.get_point():
             self.winner = self.another_player
-
-        self.notify_end()
+        
+        self.is_game_over = True
+        self.notify(GameEvent.GAME_OVER)
