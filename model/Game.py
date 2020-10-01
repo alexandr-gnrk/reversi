@@ -1,98 +1,117 @@
-DEFULT_DIMENSION = 8
-
+import itertools
+from cell import Cell
 
 class Game:
-    def __init__(self, player1, player2):
-        self.dimension = DEFULT_DIMENSION
-        self.initial_placement(player1, player2)
 
-    # def __init__(self, d, player1, player2):
-    #     self.dimension = d if d > 2 and d % 2 != 0 else DEFULT_DIMENSION
-    #     self.initial_placement(player1, player2)
-
-    def initial_placement(self, player1, player2):
+    def __init__(self, player1, player2, dimension=4):
         self.board = []
-        for i in range(self.dimension):
-            self.board.append([0] * self.dimension)
-        self.board[self.dimension // 2 - 1][self.dimension // 2 - 1] = 1
-        self.board[self.dimension // 2 - 1][self.dimension // 2] = -1
-        self.board[self.dimension // 2][self.dimension // 2 - 1] = -1
-        self.board[self.dimension // 2][self.dimension // 2] = 1
-
-        self.player1 = player1
-        self.player2 = player2
-
         self.current_player = player1
         self.another_player = player2
-
-        self.current_player.color = -1
-        self.another_player.color = 1
-
+        self.current_player.color = Cell.BLACK
+        self.another_player.color = Cell.WHITE
         self.passes = 0
+
+        self.initial_placement(dimension)
+
+
+    def initial_placement(self, dimension):
+        for i in range(dimension):
+            self.board.append([Cell.EMPTY] * dimension)
+        self.board[dimension // 2 - 1][dimension // 2 - 1] = Cell.WHITE
+        self.board[dimension // 2 - 1][dimension // 2] = Cell.BLACK
+        self.board[dimension // 2][dimension // 2 - 1] = Cell.BLACK
+        self.board[dimension // 2][dimension // 2] = Cell.WHITE
+
 
     def change_player(self):
         self.current_player, self.another_player = self.another_player, self.current_player
 
+
     def get_available_moves(self):
-        available_moves = []
+        available_moves = list()
         for i in range(len(self.board)):
             for j in range(len(self.board)):
-                if self.board[i][j] == 0 and self.is_available_cell(i, j):
+                if self.is_available_cell(i, j):
                     available_moves.append((i, j))
         return available_moves
 
-    def is_available_cell(self, i, j):
-        is_available = False
-        for change_i in [-1, 0, 1]:
-            for change_j in [-1, 0, 1]:
-                is_available = is_available or self.check_line(
-                    i, j, change_i, change_j)
-        return is_available
 
-    def check_line(self, i, j, change_i, change_j):
-        i += change_i
-        j += change_j
-        count = 0
-        while (i >= 0) and (j >= 0) and (i < self.dimension) and (j < self.dimension) and (self.board[i][j] == self.another_player.color):
-            i += change_i
-            j += change_j
-            count += 1
-        if (i >= 0) and (j >= 0) and (i < self.dimension) and (j < self.dimension) and (self.board[i][j] == self.current_player.color) and (count > 0):
+    def is_available_cell(self, i, j):
+        if self.board[i][j] != Cell.EMPTY:
+            return False
+
+        for diff in itertools.product([-1, 0, 1], repeat=2):
+            i_diff, j_diff = diff
+            if self.is_line_bounded(i, j, i_diff, j_diff):
+                return True
+
+        return False
+
+
+    def is_cell_exist(self, i, j):
+        if i >= 0 and j >= 0 and i < len(self.board) and j < len(self.board):
+            return True
+        return False
+
+
+    def is_line_bounded(self, i, j, i_diff, j_diff):
+        i += i_diff
+        j += j_diff
+        amount = 0
+        while self.is_cell_exist(i, j) and (self.board[i][j] == self.another_player.color):
+            i += i_diff
+            j += j_diff
+            amount += 1
+        if self.is_cell_exist(i, j) and (self.board[i][j] == self.current_player.color) and (amount > 0):
             return True
 
         return False
 
-    def reverse_line(self, i, j, change_i, change_j):
-        i += change_i
-        j += change_j
+
+    def reverse_line(self, i, j, i_diff, j_diff):
+        i += i_diff
+        j += j_diff
         while (self.board[i][j] == self.another_player.color):
             self.reverse_cell(i, j)
-            i += change_i
-            j += change_j
+            i += i_diff
+            j += j_diff
+
 
     def reverse_cell(self, i, j):
         self.board[i][j] = self.current_player.color
         self.current_player.inc_point()
         self.another_player.dec_point()
 
-    def move(self, i, j):
-        for change_i in [-1, 0, 1]:
-            for change_j in [-1, 0, 1]:
-                if self.check_line(i, j, change_i, change_j):
-                    self.reverse_line(i, j, change_i, change_j)
 
+    def update_lines(self, i, j):
+        for diff in itertools.product([-1, 0, 1], repeat=2):
+            i_diff, j_diff = diff
+            if self.is_line_bounded(i, j, i_diff, j_diff):
+                self.reverse_line(i, j, i_diff, j_diff)
+
+    
+    def move(self, i, j):
+        self.update_lines(i, j)
         self.board[i][j] = self.current_player.color
         self.current_player.inc_point()
         self.change_player()
 
+        self.print_board()
+
+
     def print_board(self):
         available_moves = self.get_available_moves()
-        for i in range(self.dimension):
-            for j in range(self.dimension):
+        print(available_moves)
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
                 if (i, j) in available_moves:
                     print("X", end = "")
                 else:
-                    print(2 if self.board[i][j] == -1
-                          else self.board[i][j], end="")
+                    out = 0
+                    if self.board[i][j] == Cell.BLACK:
+                        out = 2
+                    elif self.board[i][j] == Cell.WHITE:
+                        out = 1
+                    print(out, end="")
             print()
         print()
