@@ -15,11 +15,12 @@ class Game(Subject):
         self.observers = list()
 
         self.initial_placement(dimension)
-        self.notify()
 
-
+        
     def attach(self, observer):
         self.observers.append(observer)
+        self.notify()
+
 
 
     def detach(self, observer):
