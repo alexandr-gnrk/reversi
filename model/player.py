@@ -1,7 +1,13 @@
-class Player():
-    def __init__(self):
-        self.__point = 2
+from abc import ABCMeta, abstractmethod
 
+
+class Player(metaclass=ABCMeta):
+    @abstractmethod
+    def __init__(self, name):
+        self.name = name
+        self.color = None
+        self.__point = 2
+    
     def inc_point(self):
         self.__point += 1
 

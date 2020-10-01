@@ -1,6 +1,6 @@
-from Game import Game
-from AlivePlayer import AlivePlayer
+from game import Game
+from consoleplayer import ConsolePlayer
 
 
-g = Game(AlivePlayer('Sasha'), AlivePlayer('Vanya'))
+g = Game(ConsolePlayer('Sasha'), ConsolePlayer('Vanya'))
 g.print_board()
