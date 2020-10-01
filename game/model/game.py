@@ -123,7 +123,8 @@ class Game(Subject):
 
 
     def check_end_game(self):
-        if passes == 2 or self.current_player.get_point() + self.another_player.get_point() == len(self.board) ** 2:
+        # passes ніде не використовується
+        if self.passes == 2 or self.current_player.get_point() + self.another_player.get_point() == len(self.board) ** 2:
             self.end_game()
             
     def end_game(self):

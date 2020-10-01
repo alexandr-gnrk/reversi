@@ -9,10 +9,10 @@ class ConsoleView(Observer):
         for i in range(len(game.board)):
             for j in range(len(game.board)):
                 if (i, j) in available_moves:
-                    print("X", end = "")
+                    print("X", end = " ")
                 else:
                     out = 0
-                    print(int(game.board[i][j]), end="")
+                    print(int(game.board[i][j]), end=" ")
             print()
         print()
 
