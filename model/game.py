@@ -1,5 +1,5 @@
 import itertools
-from cell import Cell
+from .cell import Cell
 
 class Game:
 

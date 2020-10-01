@@ -1,4 +1,4 @@
-from player import Player
+from .player import Player
 
 class ConsolePlayer(Player):
     def __init__(self, name):

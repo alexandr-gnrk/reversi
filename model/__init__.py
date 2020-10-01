@@ -1,1 +1,1 @@
-# __all__ = ["simper"]
+__all__ = ['aiplayer', 'cell', 'consoleplayer', 'game', 'player']
