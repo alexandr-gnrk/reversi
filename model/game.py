@@ -1,17 +1,33 @@
 import itertools
 from .cell import Cell
+from .subject import Subject
 
-class Game:
+class Game(Subject):
 
     def __init__(self, player1, player2, dimension=8):
-        self.board = []
+        self.board = list()
         self.current_player = player1
         self.another_player = player2
         self.current_player.color = Cell.BLACK
         self.another_player.color = Cell.WHITE
         self.passes = 0
+        
+        self.observers = list()
 
         self.initial_placement(dimension)
+
+
+    def attach(self, observer):
+        self.observers.append(observer)
+
+
+    def detach(self, observer):
+        self.observers.remove(observer)
+
+
+    def notify(self):
+        for observer in self.observers:
+            observer.update(self)
 
 
     def initial_placement(self, dimension):
@@ -96,7 +112,8 @@ class Game:
         self.current_player.inc_point()
         self.change_player()
 
-        self.print_board()
+        self.notify()
+        # self.print_board()
 
 
     def print_board(self):
