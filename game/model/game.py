@@ -128,8 +128,8 @@ class Game(Subject):
             
     def end_game(self):
         if self.current_player.get_point() > self.another_player.get_point():
-                self.winner = current_player
-            elif self.current_player.get_point() < self.another_player.get_point():
-                self.winner = another_player
+            self.winner = current_player
+        elif self.current_player.get_point() < self.another_player.get_point():
+            self.winner = another_player
 
-            self.notify_end()
+        self.notify_end()

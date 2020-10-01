@@ -1,7 +1,7 @@
-from model.game import Game
-from model.consoleplayer import ConsolePlayer
-from view.consoleview import ConsoleView
-
+from game.model.game import Game
+from game.model.consoleplayer import ConsolePlayer
+from game.view.consoleview import ConsoleView
+from game.controller import consolecontroller
 
 view = ConsoleView()
 g = Game(ConsolePlayer('Sasha'), ConsolePlayer('Vanya'))
