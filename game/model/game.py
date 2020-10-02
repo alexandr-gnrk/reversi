@@ -10,7 +10,6 @@ class Game(Subject):
         self.another_player = player2
         self.current_player.color = Cell.BLACK
         self.another_player.color = Cell.WHITE
-        self.passes = 0
         self.winner = None
         
         self.observers = list()
@@ -119,18 +118,20 @@ class Game(Subject):
         self.current_player.inc_point()
         self.change_player()
         self.notify()
+        if not self.get_available_moves():
+            self.change_player()
+            #notify PASS            
         self.check_end_game()
 
 
     def check_end_game(self):
-        # passes ніде не використовується
-        if self.passes == 2 or self.current_player.get_point() + self.another_player.get_point() == len(self.board) ** 2:
+        if not self.get_available_moves():
             self.end_game()
             
     def end_game(self):
         if self.current_player.get_point() > self.another_player.get_point():
-            self.winner = current_player
+            self.winner = self.current_player
         elif self.current_player.get_point() < self.another_player.get_point():
-            self.winner = another_player
+            self.winner = self.another_player
 
         self.notify_end()

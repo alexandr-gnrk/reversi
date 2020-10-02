@@ -17,7 +17,7 @@ class ConsoleView(Observer):
         print()
 
     def game_over(self, game):
-        if not is_None(game.winner):
+        if game.winner:
             print(game.winner.name + " WIN")
         else:
             print("TIE")
