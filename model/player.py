@@ -13,3 +13,6 @@ class Player(metaclass=ABCMeta):
 
     def dec_point(self):
         self.__point -= 1
+
+    def get_point(self):
+        return self.__point

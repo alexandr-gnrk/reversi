@@ -11,6 +11,7 @@ class Game(Subject):
         self.current_player.color = Cell.BLACK
         self.another_player.color = Cell.WHITE
         self.passes = 0
+        self.winner = None
         
         self.observers = list()
 
@@ -30,6 +31,10 @@ class Game(Subject):
     def notify(self):
         for observer in self.observers:
             observer.update(self)
+
+    def notify_end(self):
+        for observer in self.observers:
+            observer.game_over(self)
 
 
     def initial_placement(self, dimension):
@@ -113,5 +118,18 @@ class Game(Subject):
         self.board[i][j] = self.current_player.color
         self.current_player.inc_point()
         self.change_player()
-
         self.notify()
+        self.check_end_game()
+
+
+    def check_end_game(self):
+        if passes == 2 or self.current_player.get_point() + self.another_player.get_point() == len(self.board) ** 2:
+            self.end_game()
+            
+    def end_game(self):
+        if self.current_player.get_point() > self.another_player.get_point():
+                self.winner = current_player
+            elif self.current_player.get_point() < self.another_player.get_point():
+                self.winner = another_player
+
+            self.notify_end()
