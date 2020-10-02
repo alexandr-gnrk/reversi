@@ -120,6 +120,7 @@ class Game(Subject):
         self.notify()
         if not self.get_available_moves():
             self.change_player()
+            self.notify()
             #notify PASS            
         self.check_end_game()
 
