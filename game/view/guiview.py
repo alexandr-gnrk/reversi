@@ -20,7 +20,6 @@ class GUIView(Observer):
 
     def update(self, game, event):
         if event == GameEvent.GAME_STARTED:
-            print("==========[ Reversi ]==========")
             self.redraw(game)
         elif event == GameEvent.FIELD_UPDATED:
             self.redraw(game)
@@ -58,6 +57,12 @@ class GUIView(Observer):
 
     def redraw(self, game):
         self.render_field(game)
+        self.button('Restart', 25, 525, 100, 50, (241,241,241), (255,241,241))
+        self.button('Exit', 475, 525, 100, 50, (241,241,241), (255,241,241))
+        self.button('Player vs Player', 25, 20, 100, 25, (241,241,241), (255,241,241))
+        self.button('Player vs Bot', 25, 55, 100, 25, (241,241,241), (255,241,241))
+        # self.button('Bot vs Bot', 25, 90, 100, 25, (241,241,241), (255,241,241))
+
 
     def render_field(self, game):
         self.screen.fill((0, 160, 0))
@@ -140,3 +145,19 @@ class GUIView(Observer):
 
                 pygame.draw.circle(self.screen,
                     color, center, cell_diff/2*0.8)
+
+    def button(self, msg, x, y, w, h, ic, ac):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+
+        if x+w > mouse[0] > x and y+h > mouse[1] > y:
+            pygame.draw.rect(self.screen, ac,(x,y,w,h))
+        else:
+            pygame.draw.rect(self.screen, ic,(x,y,w,h))
+
+        font = pygame.font.Font(pygame.font.get_default_font(), 12)
+        textSurf = font.render(msg, True, (0,0,0))
+        textRect = textSurf.get_rect()
+
+        textRect.center = ( (x+(w/2)), (y+(h/2)) )
+        self.screen.blit(textSurf, textRect)

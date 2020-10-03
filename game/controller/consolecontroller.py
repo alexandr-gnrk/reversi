@@ -28,7 +28,7 @@ class ConsoleController():
         print('Game mods:')
         print('    0 - Player vs Player')
         print('    1 - Player vs Bot')
-        print('    2 - Bot vs Bot')
+        # print('    2 - Bot vs Bot')
         mode = int(input('Enter game mode: '))
         if mode == 0:
             return GameMode.PLAYER_VS_PLAYER

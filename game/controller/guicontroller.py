@@ -9,8 +9,10 @@ import time
 class GUIController():
 
     def __init__(self, screen):
+        self.gamemode = GameMode.PLAYER_VS_PLAYER
         self.screen = screen
         self.gamemodel = Game()
+        self.is_end = False
 
     def create_players(self, gamemode):
         if gamemode == GameMode.PLAYER_VS_PLAYER:
@@ -26,51 +28,61 @@ class GUIController():
         return player1, player2
 
 
-    def request_gamemode(self):
-        print('Game mods:')
-        print('    0 - Player vs Player')
-        print('    1 - Player vs Bot')
-        print('    2 - Bot vs Bot')
-        mode = int(input('Enter game mode: '))
-        if mode == 0:
-            return GameMode.PLAYER_VS_PLAYER
-        elif mode == 1:
-            return GameMode.PLAYER_VS_BOT
-        else:
-            return GameMode.BOT_VS_BOT
-
-
     def start(self):
-        gamemode = self.request_gamemode()
+        # gamemode = self.request_gamemode()
+        gamemode = GameMode.PLAYER_VS_PLAYER
         players = self.create_players(gamemode)
         self.gamemodel.start(*players)
-        # while True:
-        #     print('>>> ', end='', flush=True)
-            
 
-
-        #     inp = input()    
-        #     command = inp.split()[0]
-        #     args = inp.split()[1:]
-        #     if command == 'move':
-        #         move = (int(args[0]), int(args[1]))
-        #         self.gamemodel.move(*move)
-        #     elif command == 'restart':
-        #         gamemode = self.request_gamemode()
-        #         players = self.create_players(gamemode)
-        #         self.gamemodel.start(*players)
-        #     elif command == 'exit':
-        #         return
         while True:
+            self.button('Restart', 25, 525, 100, 50, action=self.restart)
+            self.button('Exit', 475, 525, 100, 50, action=self.exit)
+            self.button('Player vs Player', 25, 20, 100, 25, action=self.player_vs_player)
+            self.button('Player vs Bot', 25, 55, 100, 25, action=self.player_vs_bot)
+            # self.button('Bot vs Bot', 25, 90, 100, 25, action=self.bot_vs_bot)
+
+            if self.is_end:
+                return
+            
             if not self.gamemodel.is_game_over and isinstance(self.gamemodel.current_player, AIPlayer):
                 self.make_ai_move()
-                continue
+                
             for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONUP:
+                if event.type == pygame.QUIT:
+                    return
+                elif event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
                     move = self.mouse_pos_to_move(pos)
-                    self.gamemodel.move(*move)
+                    if (0 <= move[0] <= 7) and (0 <= move[1] <= 7):
+                        self.gamemodel.move(*move)
 
+
+    def player_vs_player(self):
+        self.gamemode = GameMode.PLAYER_VS_PLAYER
+        players = self.create_players(self.gamemode)
+        self.gamemodel.start(*players)
+        self.is_end = False
+
+    def player_vs_bot(self):
+        self.gamemode = GameMode.PLAYER_VS_BOT
+        players = self.create_players(self.gamemode)
+        self.gamemodel.start(*players)
+        self.is_end = False
+
+    def bot_vs_bot(self):
+        self.gamemode = GameMode.BOT_VS_BOT
+        players = self.create_players(self.gamemode)
+        self.gamemodel.start(*players)
+        self.is_end = False
+
+    def restart(self):
+        gamemode = self.gamemode
+        players = self.create_players(gamemode)
+        self.gamemodel.start(*players)
+
+
+    def exit(self):
+        self.is_end = True
 
     def mouse_pos_to_move(self, pos):
         w, h = pygame.display.get_surface().get_size()
@@ -80,28 +92,18 @@ class GUIController():
 
         return (int(x/cell_diff)), (int(y/cell_diff))
 
-    def button(msg, x, y, w, h, ic, ac, action=None):
+    def button(self, msg, x, y, w, h, action=None):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        print(click)
+
         if x+w > mouse[0] > x and y+h > mouse[1] > y:
-            pygame.draw.rect(gameDisplay, ac,(x,y,w,h))
-
             if click[0] == 1 and action != None:
-                action()         
-        else:
-            pygame.draw.rect(gameDisplay, ic,(x,y,w,h))
-
-        smallText = pygame.font.SysFont("comicsansms",20)
-        textSurf, textRect = text_objects(msg, smallText)
-        textRect.center = ( (x+(w/2)), (y+(h/2)) )
-        gameDisplay.blit(textSurf, textRect)
+                action()
 
 
     def make_ai_move(self):
         move = self.generate_move()
         time.sleep(1)
-        print('move', *move)
         self.gamemodel.move(*move)
 
     def generate_move(self):
