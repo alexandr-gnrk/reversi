@@ -1,1 +1,1 @@
-__all__ = ['consolecontroller', 'gamemode']
+__all__ = ['consolecontroller', 'gamemode', 'guicontroller']
