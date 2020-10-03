@@ -5,13 +5,11 @@ from .gameevent import GameEvent
 
 class Game(Subject):
 
-    def __init__(self, player1, player2):
+    def __init__(self):
         self.DIMENSION = 4
         self.board = list()
-        self.current_player = player1
-        self.another_player = player2
-        self.current_player.color = Cell.BLACK
-        self.another_player.color = Cell.WHITE
+        self.current_player = None
+        self.another_player = None
         self.winner = None
         self.is_game_over = False
 
@@ -31,11 +29,19 @@ class Game(Subject):
             observer.update(self, event)
 
 
-    def start(self):
+    def start(self, player1, player2):
+        self.is_game_over = False
+        self.current_player = player1
+        self.another_player = player2
+        self.current_player.color = Cell.BLACK
+        self.another_player.color = Cell.WHITE
         self.initial_placement(self.DIMENSION)
         self.notify(GameEvent.GAME_STARTED)
+        self.notify(GameEvent.NEXT_MOVE)
+
 
     def initial_placement(self, dimension):
+        self.board = list()
         for i in range(dimension):
             self.board.append([Cell.EMPTY] * dimension)
         self.board[dimension // 2 - 1][dimension // 2 - 1] = Cell.WHITE
@@ -114,8 +120,9 @@ class Game(Subject):
     def move(self, i, j):
         if (i, j) not in self.get_available_moves():
             self.notify(GameEvent.INCORRECT_MOVE)
+            self.notify(GameEvent.NEXT_MOVE)
             return
-            
+
         self.update_lines(i, j)
         self.board[i][j] = self.current_player.color
         self.current_player.inc_point()
@@ -128,6 +135,9 @@ class Game(Subject):
 
         if self.is_end_game():
             self.end_game()
+        else:
+            self.notify(GameEvent.NEXT_MOVE)
+
 
     def is_end_game(self):
         if not self.get_available_moves():

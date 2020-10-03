@@ -8,9 +8,9 @@ import time
 class ConsoleController():
 
     def __init__(self):
-        gamemode = self.request_gamemode()
+        self.gamemodel = Game()
 
-        player1 = AIPlayer('Player1')
+    def create_players(self, gamemode):
         if gamemode == GameMode.PLAYER_VS_PLAYER:
             player1 = ConsolePlayer('Player1')
             player2 = ConsolePlayer('Player2')
@@ -21,7 +21,7 @@ class ConsoleController():
             player1 = AIPlayer('Player1')
             player2 = AIPlayer('Player2')
 
-        self.gamemodel = Game(player1, player2)
+        return player1, player2
 
 
     def request_gamemode(self):
@@ -39,22 +39,43 @@ class ConsoleController():
 
 
     def start(self):
-        self.gamemodel.start()
-        while not self.gamemodel.is_game_over:
-            if isinstance(self.gamemodel.current_player, ConsolePlayer):
-                move = self.request_move_from_console()
-            else:
-                move = self.generate_move()
-            self.gamemodel.move(*move)
+        gamemode = self.request_gamemode()
+        players = self.create_players(gamemode)
+        self.gamemodel.start(*players)
+        while True:
+            print('>>> ', end='', flush=True)
+            
+            if not self.gamemodel.is_game_over and isinstance(self.gamemodel.current_player, AIPlayer):
+                self.make_ai_move()
+                continue
 
-    def request_move_from_console(self):
-        move_str = input(self.gamemodel.current_player.name + ' move: ')
-        return list(map(int, move_str.split()))
+            inp = input()    
+            command = inp.split()[0]
+            args = inp.split()[1:]
+            if command == 'move':
+                move = (int(args[0]), int(args[1]))
+                self.gamemodel.move(*move)
+            elif command == 'restart':
+                gamemode = self.request_gamemode()
+                players = self.create_players(gamemode)
+                self.gamemodel.start(*players)
+            elif command == 'exit':
+                return
+
+    def make_move(self):
+        if isinstance(self.gamemodel.current_player, ConsolePlayer):
+            move = self.get_move_from_console()
+        else:
+            move = self.generate_move()
+        self.gamemodel.move(*move)
+
+    def make_ai_move(self):
+        move = self.generate_move()
+        time.sleep(1)
+        print('move', *move)
+        self.gamemodel.move(*move)
 
     def generate_move(self):
-        move_str = print(self.gamemodel.current_player.name + ' move:  ', end='', flush=True)
         moves = self.gamemodel.get_available_moves()
         move = random.choice(moves)
-        time.sleep(1)
-        print(*move)
         return move
