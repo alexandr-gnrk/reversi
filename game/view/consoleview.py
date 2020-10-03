@@ -17,9 +17,6 @@ class ConsoleView(Observer):
         elif event == GameEvent.GAME_OVER:
             self.nofify_game_over(game)
 
-        # print(game.current_player.name + " - ", game.current_player.get_point())
-        # print(game.another_player.name + " - ", game.another_player.get_point())
-
 
     def nofify_game_over(self, game):
         if game.winner:
@@ -28,15 +25,19 @@ class ConsoleView(Observer):
             print("TIE")
         print('Enter restart to continue or exit to leave.')
 
+
     def notify_passed_player(self, game):
         print('The', game.current_player.name, 'passes the turn.')
+
 
     def redraw(self, game):
         self.render_field(game)
         self.render_available_moves(game)
 
+
     def render_available_moves(self, game):
         print('List of available moves:', game.get_available_moves())
+
 
     def render_field(self, game):
         available_moves = game.get_available_moves()
@@ -49,6 +50,7 @@ class ConsoleView(Observer):
                     print(int(game.board[i][j]), end=" ")
             print()
         print()
+
 
     def notify_incorrect_move(self, game):
         print('Incorrect move, try again!')

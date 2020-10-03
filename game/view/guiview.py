@@ -33,9 +33,6 @@ class GUIView(Observer):
         elif event == GameEvent.GAME_OVER:
             self.nofify_game_over(game)
 
-        # print(game.current_player.name + " - ", game.current_player.get_point())
-        # print(game.another_player.name + " - ", game.another_player.get_point())
-
 
     def nofify_game_over(self, game):
         if game.winner:
@@ -56,6 +53,7 @@ class GUIView(Observer):
         self.screen.blit(TextSurf, TextRect)
         pygame.display.update()
 
+
     def redraw(self, game):
         if self.game.current_player.name == 'Player1':
             player1 = self.game.current_player
@@ -63,7 +61,6 @@ class GUIView(Observer):
         else:
             player1 = self.game.another_player
             player2 = self.game.current_player
-
 
         self.render_field(game)
 
@@ -80,8 +77,8 @@ class GUIView(Observer):
         self.button('Exit', 475, 525, 100, 50, (241,241,241), (255,241,241))
         self.button('Player vs Player', 25, 20, 100, 25, (241,241,241), (255,241,241))
         self.button('Player vs Bot', 25, 55, 100, 25, (241,241,241), (255,241,241))
-        pygame.display.update() 
         # self.button('Bot vs Bot', 25, 90, 100, 25, (241,241,241), (255,241,241))
+        pygame.display.update() 
 
 
     def render_field(self, game):
@@ -90,10 +87,12 @@ class GUIView(Observer):
         self.draw_chips(game)
         pygame.display.update()
 
+
     def text_objects(self, text, font_size=18, color=BLACK):
         font = pygame.font.Font(pygame.font.get_default_font(), font_size)
         textSurface = font.render(text, True, color)
         return textSurface, textSurface.get_rect()
+
 
     def notify_incorrect_move(self, game):
         w, h = pygame.display.get_surface().get_size()
@@ -127,7 +126,6 @@ class GUIView(Observer):
                     color = BLACK_GREEN
                 pygame.draw.rect(self.screen, color, (rleft, rtop, cell_diff, cell_diff))
 
-
         for i in range(1, 8):
             cur_diff = i*cell_diff
 
@@ -160,11 +158,11 @@ class GUIView(Observer):
                 elif game.board[i][j] == Cell.BLACK:
                     color = BLACK
                 elif game.board[i][j] == Cell.WHITE:
-                    color = WHITE
-                
+                    color = WHITE                
 
                 pygame.draw.circle(self.screen,
                     color, center, cell_diff/2*0.8)
+
 
     def button(self, msg, x, y, w, h, ic, ac):
         mouse = pygame.mouse.get_pos()

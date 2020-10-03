@@ -142,6 +142,7 @@ class Game(Subject):
     def is_end_game(self):
         if not self.get_available_moves():
             return True
+         
             
     def end_game(self):
         if self.current_player.get_point() > self.another_player.get_point():

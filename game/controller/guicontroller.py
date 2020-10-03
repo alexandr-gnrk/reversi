@@ -14,6 +14,7 @@ class GUIController():
         self.gamemodel = Game()
         self.is_end = False
 
+
     def create_players(self, gamemode):
         if gamemode == GameMode.PLAYER_VS_PLAYER:
             player1 = ConsolePlayer('Player1')
@@ -63,17 +64,20 @@ class GUIController():
         self.gamemodel.start(*players)
         self.is_end = False
 
+
     def player_vs_bot(self):
         self.gamemode = GameMode.PLAYER_VS_BOT
         players = self.create_players(self.gamemode)
         self.gamemodel.start(*players)
         self.is_end = False
 
+
     def bot_vs_bot(self):
         self.gamemode = GameMode.BOT_VS_BOT
         players = self.create_players(self.gamemode)
         self.gamemodel.start(*players)
         self.is_end = False
+
 
     def restart(self):
         gamemode = self.gamemode
@@ -84,6 +88,7 @@ class GUIController():
     def exit(self):
         self.is_end = True
 
+
     def mouse_pos_to_move(self, pos):
         w, h = pygame.display.get_surface().get_size()
         x = pos[0] - 0.2*w
@@ -91,6 +96,7 @@ class GUIController():
         cell_diff = 0.6*w/8
 
         return (int(x/cell_diff)), (int(y/cell_diff))
+
 
     def button(self, msg, x, y, w, h, action=None):
         mouse = pygame.mouse.get_pos()
@@ -105,6 +111,7 @@ class GUIController():
         move = self.generate_move()
         time.sleep(1)
         self.gamemodel.move(*move)
+
 
     def generate_move(self):
         moves = self.gamemodel.get_available_moves()

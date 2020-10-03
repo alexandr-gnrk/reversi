@@ -8,11 +8,14 @@ class Player(metaclass=ABCMeta):
         self.color = None
         self.__point = 2
     
+
     def inc_point(self):
         self.__point += 1
 
+
     def dec_point(self):
         self.__point -= 1
+
 
     def get_point(self):
         return self.__point

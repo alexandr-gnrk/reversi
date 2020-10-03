@@ -10,6 +10,7 @@ class ConsoleController():
     def __init__(self):
         self.gamemodel = Game()
 
+
     def create_players(self, gamemode):
         if gamemode == GameMode.PLAYER_VS_PLAYER:
             player1 = ConsolePlayer('Player1')
@@ -62,6 +63,7 @@ class ConsoleController():
             elif command == 'exit':
                 return
 
+
     def make_move(self):
         if isinstance(self.gamemodel.current_player, ConsolePlayer):
             move = self.get_move_from_console()
@@ -69,11 +71,13 @@ class ConsoleController():
             move = self.generate_move()
         self.gamemodel.move(*move)
 
+
     def make_ai_move(self):
         move = self.generate_move()
         time.sleep(1)
         print('move', *move)
         self.gamemodel.move(*move)
+
 
     def generate_move(self):
         moves = self.gamemodel.get_available_moves()
