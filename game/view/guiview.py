@@ -19,6 +19,7 @@ class GUIView(Observer):
         self.screen = screen
 
     def update(self, game, event):
+        self.game = game
         if event == GameEvent.GAME_STARTED:
             self.redraw(game)
         elif event == GameEvent.FIELD_UPDATED:
@@ -56,11 +57,30 @@ class GUIView(Observer):
         pygame.display.update()
 
     def redraw(self, game):
+        if self.game.current_player.name == 'Player1':
+            player1 = self.game.current_player
+            player2 = self.game.another_player
+        else:
+            player1 = self.game.another_player
+            player2 = self.game.current_player
+
+
         self.render_field(game)
+
+        w, h = pygame.display.get_surface().get_size()
+        TextSurf, TextRect = self.text_objects('Player1: ' + str(player1.get_point()))
+        TextRect.center = (0.1*w, (h * 0.5))
+        self.screen.blit(TextSurf, TextRect)
+        
+        TextSurf, TextRect = self.text_objects('Player2: ' + str(player2.get_point()))
+        TextRect.center = ((0.9*w),(h * 0.5))
+        self.screen.blit(TextSurf, TextRect)
+
         self.button('Restart', 25, 525, 100, 50, (241,241,241), (255,241,241))
         self.button('Exit', 475, 525, 100, 50, (241,241,241), (255,241,241))
         self.button('Player vs Player', 25, 20, 100, 25, (241,241,241), (255,241,241))
         self.button('Player vs Bot', 25, 55, 100, 25, (241,241,241), (255,241,241))
+        pygame.display.update() 
         # self.button('Bot vs Bot', 25, 90, 100, 25, (241,241,241), (255,241,241))
 
 
