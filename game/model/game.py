@@ -6,7 +6,7 @@ from .gameevent import GameEvent
 class Game(Subject):
 
     def __init__(self):
-        self.DIMENSION = 4
+        self.DIMENSION = 8
         self.board = list()
         self.current_player = None
         self.another_player = None
