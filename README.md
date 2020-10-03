@@ -24,6 +24,7 @@ Run the game:
 
 ## Rules
 <p>The game begins with four disks placed in a square in the middle of the grid, two facing white-side-up, two dark-side-up, so that the same-colored disks are on a diagonal. The dark player moves first.</p>
+<img src="https://github.com/alexandr-gnrk/reversi/blob/main/screenshots/game_start.JPG" width ="40%" height ="40%">
 <p>In every move Player must place a piece on the board and so that there exists at least one straight (horizontal, vertical, or diagonal) occupied line between the new piece and another this player's piece, with one or more contiguous other player's pieces between them.</p>
 <p>Then in every straight, all other player's pieces between the new piece and another this player's piece reverse. </p>
 <p>Players take alternate turns. If one player can not make a valid move, play passes back to the other player. When neither player can move, the game ends. This occurs when the grid has filled up or when neither player can legally place a piece in any of the remaining squares.</p>
@@ -38,4 +39,6 @@ Run the game:
 </ul>
 <p>In Player's turn, he can click on one of available position to make move.</p>
 <p>Player can't make not available move.</p>
+<img src="https://github.com/alexandr-gnrk/reversi/blob/main/screenshots/incorrect_move.JPG" width ="40%" height ="40%">
+
 <p>Program have full game loop.</p>
