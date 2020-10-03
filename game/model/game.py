@@ -112,6 +112,10 @@ class Game(Subject):
 
     
     def move(self, i, j):
+        if (i, j) not in self.get_available_moves():
+            self.notify(GameEvent.INCORRECT_MOVE)
+            return
+            
         self.update_lines(i, j)
         self.board[i][j] = self.current_player.color
         self.current_player.inc_point()

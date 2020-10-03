@@ -10,6 +10,8 @@ class ConsoleView(Observer):
             self.redraw(game)
         elif event == GameEvent.PLAYER_PASSES:
             self.notify_passed_player(game)
+        elif event == GameEvent.INCORRECT_MOVE:
+            self.notify_incorrect_move(game)
         elif event == GameEvent.GAME_OVER:
             self.congratulate_winner(game)
 
@@ -44,3 +46,6 @@ class ConsoleView(Observer):
                     print(int(game.board[i][j]), end=" ")
             print()
         print()
+
+    def notify_incorrect_move(self, game):
+        print('Incorrect move, try again!')
