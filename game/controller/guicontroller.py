@@ -6,16 +6,18 @@ import random
 import pygame
 import time
 
+
 class GUIController():
 
     def __init__(self, screen):
-        self.gamemode = GameMode.PLAYER_VS_PLAYER
+        self.gamemode = None
         self.screen = screen
         self.gamemodel = Game()
-        self.is_end = False
+        self.is_exit = False
 
 
     def create_players(self, gamemode):
+        # create players depends on game mode
         if gamemode == GameMode.PLAYER_VS_PLAYER:
             player1 = ConsolePlayer('Player1')
             player2 = ConsolePlayer('Player2')
@@ -30,90 +32,99 @@ class GUIController():
 
 
     def start(self):
-        # gamemode = self.request_gamemode()
+        # init gamemodel by default gamemode
         gamemode = GameMode.PLAYER_VS_PLAYER
         players = self.create_players(gamemode)
         self.gamemodel.start(*players)
 
+        # game loop
         while True:
-            self.button('Restart', 25, 525, 100, 50, action=self.restart)
-            self.button('Exit', 475, 525, 100, 50, action=self.exit)
-            self.button('Player vs Player', 25, 20, 100, 25, action=self.player_vs_player)
-            self.button('Player vs Bot', 25, 55, 100, 25, action=self.player_vs_bot)
-            # self.button('Bot vs Bot', 25, 90, 100, 25, action=self.bot_vs_bot)
+            # check is buttons were pressed and make corresponding action
+            self.button('Restart', 25, 525, 100, 50, 
+                action=self.restart)
+            self.button('Exit', 475, 525, 100, 50, 
+                action=self.exit)
+            self.button('Player vs Player', 25, 20, 100, 25, 
+                action=lambda: self.change_gamemode(GameMode.PLAYER_VS_PLAYER))
+            self.button('Player vs Bot', 25, 55, 100, 25, 
+                action=lambda: self.change_gamemode(GameMode.PLAYER_VS_BOT))
+            # self.button('Bot vs Bot', 25, 90, 100, 25, 
+            #     action=lambda: self.change_gamemode(GameMode.BOT_VS_BOT))
 
-            if self.is_end:
+            if self.is_exit:
                 return
             
-            if not self.gamemodel.is_game_over and isinstance(self.gamemodel.current_player, AIPlayer):
+            # if it's AI player then make move
+            if not self.gamemodel.is_game_over and \
+                    isinstance(self.gamemodel.current_player, AIPlayer):
                 self.make_ai_move()
-                
+            
+            # events handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
                 elif event.type == pygame.MOUSEBUTTONUP:
+                    # get mouse position and translate it to
+                    # game coordinate grid
                     pos = pygame.mouse.get_pos()
                     move = self.mouse_pos_to_move(pos)
+                    # chek is mouse on game field and make move
                     if (0 <= move[0] <= 7) and (0 <= move[1] <= 7):
                         self.gamemodel.move(*move)
 
 
-    def player_vs_player(self):
-        self.gamemode = GameMode.PLAYER_VS_PLAYER
-        players = self.create_players(self.gamemode)
-        self.gamemodel.start(*players)
-        self.is_end = False
-
-
-    def player_vs_bot(self):
-        self.gamemode = GameMode.PLAYER_VS_BOT
-        players = self.create_players(self.gamemode)
-        self.gamemodel.start(*players)
-        self.is_end = False
-
-
-    def bot_vs_bot(self):
-        self.gamemode = GameMode.BOT_VS_BOT
-        players = self.create_players(self.gamemode)
-        self.gamemodel.start(*players)
-        self.is_end = False
+    def change_gamemode(self, gamemode):
+        # change gamemode and restart game
+        self.gamemode = gamemode
+        self.restart()
 
 
     def restart(self):
-        gamemode = self.gamemode
-        players = self.create_players(gamemode)
+        # restart game
+        players = self.create_players(self.gamemode)
         self.gamemodel.start(*players)
 
 
     def exit(self):
-        self.is_end = True
+        self.is_exit = True
 
 
     def mouse_pos_to_move(self, pos):
+        # get distplay properites
         w, h = pygame.display.get_surface().get_size()
+        # offset position to start of
+        # game field
         x = pos[0] - 0.2*w
         y = pos[1] - 0.2*h
+        # get single cell size on field
         cell_diff = 0.6*w/8
-
-        return (int(x/cell_diff)), (int(y/cell_diff))
+        # translate x, y to integer coordinates on the field 
+        i = x//cell_diff
+        j = y//cell_diff
+        return int(i), int(j)
 
 
     def button(self, msg, x, y, w, h, action=None):
+        # get mouse position and mouse pressed information
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
-        if x+w > mouse[0] > x and y+h > mouse[1] > y:
+        # checki is mouse inside button box
+        if x + w > mouse[0] > x and y + h > mouse[1] > y:
             if click[0] == 1 and action != None:
                 action()
 
 
     def make_ai_move(self):
         move = self.generate_move()
+        # imitate thinking of AI
         time.sleep(1)
+        # and make movement
         self.gamemodel.move(*move)
 
 
     def generate_move(self):
+        # get list of available movements and choose random
         moves = self.gamemodel.get_available_moves()
         move = random.choice(moves)
         return move

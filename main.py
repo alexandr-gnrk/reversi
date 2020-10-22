@@ -17,8 +17,11 @@ icon = pygame.image.load('./src/logo.png')
 pygame.display.set_icon(icon)
 
 controller = GUIController(screen)
-# view = ConsoleView()
 view1 = GUIView(screen)
-# controller.gamemodel.attach(view)
 controller.gamemodel.attach(view1)
 controller.start()
+
+# controller = ConsoleController()
+# view = ConsoleView()
+# controller.gamemodel.attach(view)
+# controller.start()
