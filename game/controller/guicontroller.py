@@ -109,7 +109,7 @@ class GUIController():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
-        # checki is mouse inside button box
+        # check is mouse inside button box
         if x + w > mouse[0] > x and y + h > mouse[1] > y:
             if click[0] == 1 and action != None:
                 action()
