@@ -37,7 +37,6 @@ class Game(Subject):
         self.another_player.color = Cell.WHITE
         self.initial_placement(self.DIMENSION)
         self.notify(GameEvent.GAME_STARTED)
-        self.notify(GameEvent.NEXT_MOVE)
 
 
     def initial_placement(self, dimension):

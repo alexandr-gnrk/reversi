@@ -22,6 +22,7 @@ class GUIView(Observer):
         self.game = game
         if event == GameEvent.GAME_STARTED:
             self.redraw(game)
+            self.notify_moving_player(game)
         elif event == GameEvent.FIELD_UPDATED:
             self.redraw(game)
         elif event == GameEvent.NEXT_MOVE:
@@ -32,6 +33,7 @@ class GUIView(Observer):
             self.notify_incorrect_move(game)
         elif event == GameEvent.GAME_OVER:
             self.nofify_game_over(game)
+        pygame.display.update()
 
 
     def nofify_game_over(self, game):
@@ -43,7 +45,6 @@ class GUIView(Observer):
         TextSurf, TextRect = self.text_objects(text, 25, BLACK_RED)
         TextRect.center = ((w / 2),(h * 0.1))
         self.screen.blit(TextSurf, TextRect)
-        pygame.display.update()
 
 
     def notify_passed_player(self, game):
@@ -51,7 +52,6 @@ class GUIView(Observer):
         TextSurf, TextRect = self.text_objects('The ' + game.current_player.name + ' passes the turn.')
         TextRect.center = ((w / 2),(h * 0.9))
         self.screen.blit(TextSurf, TextRect)
-        pygame.display.update()
 
 
     def redraw(self, game):
@@ -78,14 +78,12 @@ class GUIView(Observer):
         self.button('Player vs Player', 25, 20, 100, 25, (241,241,241), (255,241,241))
         self.button('Player vs Bot', 25, 55, 100, 25, (241,241,241), (255,241,241))
         # self.button('Bot vs Bot', 25, 90, 100, 25, (241,241,241), (255,241,241))
-        pygame.display.update() 
 
 
     def render_field(self, game):
         self.screen.fill((0, 160, 0))
         self.draw_field()
         self.draw_chips(game)
-        pygame.display.update()
 
 
     def text_objects(self, text, font_size=18, color=BLACK):
@@ -99,7 +97,6 @@ class GUIView(Observer):
         TextSurf, TextRect = self.text_objects('Incorrect move, try again!')
         TextRect.center = ((w / 2),(h * 0.1))
         self.screen.blit(TextSurf, TextRect)
-        pygame.display.update()
 
 
     def notify_moving_player(self, game):
@@ -107,7 +104,6 @@ class GUIView(Observer):
         TextSurf, TextRect = self.text_objects(game.current_player.name + ' your turn.')
         TextRect.center = ((w / 2),(h * 0.9))
         self.screen.blit(TextSurf, TextRect)
-        pygame.display.update()
 
 
     def draw_field(self):
