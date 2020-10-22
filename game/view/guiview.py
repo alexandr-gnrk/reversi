@@ -17,9 +17,10 @@ BUTTON_HOVER = (189, 189, 189)
 
 class GUIView(Observer):
 
-    def __init__(self, screen):
+    def __init__(self, screen, experimental=False):
         self.screen = screen
         self.w, self.h = pygame.display.get_surface().get_size()
+        self.experimental = experimental
 
     def update(self, game, event):
         self.game = game
@@ -80,7 +81,8 @@ class GUIView(Observer):
         self.button('Exit', 475, 525, 100, 50, BUTTON, BUTTON_HOVER)
         self.button('Player vs Player', 25, 20, 100, 25, BUTTON, BUTTON_HOVER)
         self.button('Player vs Bot', 25, 55, 100, 25, BUTTON, BUTTON_HOVER)
-        # self.button('Bot vs Bot', 25, 90, 100, 25, (255,241,241), BUTTON_HOVER)
+        if self.experimental:
+            self.button('Bot vs Bot', 25, 90, 100, 25, (255,241,241), BUTTON_HOVER)
 
 
     def render_field(self, game):

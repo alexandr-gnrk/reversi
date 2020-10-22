@@ -8,8 +8,9 @@ import time
 
 class ConsoleController():
 
-    def __init__(self):
+    def __init__(self, experimental=False):
         self.gamemodel = Game()
+        self.experimental = experimental
 
 
     def create_players(self, gamemode):
@@ -31,7 +32,8 @@ class ConsoleController():
         print('Game mods:')
         print('    0 - Player vs Player')
         print('    1 - Player vs Bot')
-        # print('    2 - Bot vs Bot')
+        if self.experimental:
+            print('    2 - Bot vs Bot')
 
         # prompt for input gamemode
         mode = int(input('Enter game mode: '))

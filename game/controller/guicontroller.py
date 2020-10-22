@@ -9,11 +9,12 @@ import time
 
 class GUIController():
 
-    def __init__(self, screen):
+    def __init__(self, screen, experimental=False):
         self.gamemode = None
         self.screen = screen
         self.gamemodel = Game()
         self.is_exit = False
+        self.experimental = experimental
 
 
     def create_players(self, gamemode):
@@ -48,8 +49,9 @@ class GUIController():
                 action=lambda: self.change_gamemode(GameMode.PLAYER_VS_PLAYER))
             self.button('Player vs Bot', 25, 55, 100, 25, 
                 action=lambda: self.change_gamemode(GameMode.PLAYER_VS_BOT))
-            # self.button('Bot vs Bot', 25, 90, 100, 25, 
-            #     action=lambda: self.change_gamemode(GameMode.BOT_VS_BOT))
+            if self.experimental:
+                self.button('Bot vs Bot', 25, 90, 100, 25, 
+                    action=lambda: self.change_gamemode(GameMode.BOT_VS_BOT))
 
             if self.is_exit:
                 return
