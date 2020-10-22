@@ -3,6 +3,7 @@ from ..model.gameevent import GameEvent
 
 class ConsoleView(Observer):
     def update(self, game, event):
+        # event handlig
         if event == GameEvent.GAME_STARTED:
             print("==========[ Reversi ]==========")
             self.redraw(game)
@@ -40,7 +41,9 @@ class ConsoleView(Observer):
 
 
     def render_field(self, game):
+        # get possible moves to highlight them later
         available_moves = game.get_available_moves()
+
         for i in range(len(game.board)):
             for j in range(len(game.board)):
                 if (i, j) in available_moves:
