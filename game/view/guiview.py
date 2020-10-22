@@ -4,16 +4,15 @@ from ..model.gameevent import GameEvent
 from ..model.cell import Cell
 
 
-# colours constants
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 WHITE_GREEN = (0, 138, 0)
-BLACK_GREEN = (0, 130, 0)
-BLACK_GREEN1 = (0, 114, 0)
+BLACK_GREEN = (0, 120, 0)
+BLACK_GREEN1 = (0, 100, 5)
 BLACK_RED = (128, 0, 0)
-BUTTON = (241,241,241)
-BUTTON_HOVER = (255,241,241)
+BUTTON = (241, 241, 241)
+BUTTON_HOVER = (189, 189, 189)
 
 
 class GUIView(Observer):
@@ -114,18 +113,6 @@ class GUIView(Observer):
                 # draw cell
                 pygame.draw.rect(self.screen, color, (rleft, rtop, cell_diff, cell_diff))
 
-        # drawing grid
-        for i in range(1, 8):
-            cur_diff = i*cell_diff
-            # horizontal line
-            start_pos = (top, left + cur_diff)
-            end_pos = (top + height, left + cur_diff)
-            pygame.draw.line(self.screen, BLACK, start_pos, end_pos)
-            # vertical line
-            start_pos = (left  + cur_diff, top)
-            end_pos = (left + cur_diff, top + height)
-            pygame.draw.line(self.screen, BLACK, start_pos, end_pos)
-
 
     def draw_chips(self, game):
         left, top = self.get_field_pos()
@@ -158,8 +145,6 @@ class GUIView(Observer):
     def button(self, msg, x, y, w, h, ic, ac):
         # get mouse position and mouse pressed information
         mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-
         # check is mouse inside button box
         if x+w > mouse[0] > x and y+h > mouse[1] > y:
             # if mouse hover in button paint in "ac" color
@@ -167,8 +152,7 @@ class GUIView(Observer):
         else:
             # else paint in "ic" color
             pygame.draw.rect(self.screen, ic,(x,y,w,h))
-
-        # show text inside button
+        # render text inside button
         self.render_text(msg, (x + (w/2), y + (h/2)), font_size=12)
 
 
