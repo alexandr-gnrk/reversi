@@ -2,7 +2,9 @@
 # Reversi
 This is a implementation of game [Reversi](https://en.wikipedia.org/wiki/Reversi) (with rule-set [Othello](https://en.wikipedia.org/wiki/Reversi#Othello)).
 
-***Reversi*** is a board game for two players with simple rules and deep strategy.
+**Reversi** is a board game for two players with simple rules and deep strategy.
+
+![Intro image](./screenshots/intro.png)
 
 This client supports two types of interaction through a **graphical interface** or **console**.
 
@@ -69,3 +71,9 @@ Cheklist:
 - [x] The program does not allow you to make incorrect moves
 - [x] The program determines the winner
 - [x] Implemented a full game loop
+
+## Screenshots
+![Start screen](./screenshots/screenshot0.png)
+![Random game moment](./screenshots/screenshot1.png)
+![Incorrect move](./screenshots/screenshot2.png)
+![Game end](./screenshots/screenshot3.png)
