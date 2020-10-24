@@ -34,8 +34,8 @@ class GUIController():
 
     def start(self):
         # init gamemodel by default gamemode
-        gamemode = GameMode.PLAYER_VS_PLAYER
-        players = self.create_players(gamemode)
+        self.gamemode = GameMode.PLAYER_VS_PLAYER
+        players = self.create_players(self.gamemode)
         self.gamemodel.start(*players)
 
         # game loop
