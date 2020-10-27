@@ -129,7 +129,7 @@ class GUIView(Observer):
             for j in range(game.DIMENSION):
                 rtop = top + j*cell_diff
                 # define center of a cell
-                center = (rleft + cell_diff/2, rtop + cell_diff/2)
+                center = (rtop + cell_diff/2, rleft + cell_diff/2)
                 
                 # select color depends on cell type
                 if (i, j) in available_moves:
