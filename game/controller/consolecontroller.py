@@ -1,4 +1,5 @@
 from ..model.game import Game
+from ..model.antigame import AntiGame
 from .player.consoleplayer import HumanPlayer, AIPlayer
 from .gamemode import GameMode
 import random
@@ -7,8 +8,12 @@ import time
 
 class ConsoleController():
 
-    def __init__(self, experimental=False):
-        self.gamemodel = Game()
+    def __init__(self, black_hole=None, experimental=False):
+        # set Anti-Reversi mode if black hole was passed
+        if black_hole:
+            self.gamemodel = AntiGame(black_hole)
+        else:
+            self.gamemodel = Game()
         self.experimental = experimental
 
 
