@@ -4,9 +4,11 @@ from ..model.gameevent import GameEvent
 from ..model.cell import Cell
 
 
+BACKGROUND_COLOR = (0, 160, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
+DARK_BLUE = (0, 0, 75)
 WHITE_GREEN = (0, 138, 0)
 BLACK_GREEN = (0, 120, 0)
 BLACK_GREEN1 = (0, 100, 5)
@@ -86,7 +88,7 @@ class GUIView(Observer):
 
 
     def render_field(self, game):
-        self.screen.fill((0, 160, 0))
+        self.screen.fill(BACKGROUND_COLOR)
         self.draw_field()
         self.draw_chips(game)
 
@@ -138,6 +140,8 @@ class GUIView(Observer):
                     color = BLACK
                 elif game.board[i][j] == Cell.WHITE:
                     color = WHITE        
+                elif game.board[i][j] == Cell.HOLE:
+                    color = DARK_BLUE
 
                 # draw chip
                 pygame.draw.circle(self.screen,

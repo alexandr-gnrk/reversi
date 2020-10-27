@@ -1,5 +1,6 @@
 from .observer import Observer
 from ..model.gameevent import GameEvent
+from ..model.cell import Cell
 
 class ConsoleView(Observer):
     def update(self, game, event):
@@ -47,10 +48,12 @@ class ConsoleView(Observer):
         for i in range(len(game.board)):
             for j in range(len(game.board)):
                 if (i, j) in available_moves:
-                    print("X", end = " ")
+                    print('X', end=' ')
+                elif game.board[i][j] == Cell.HOLE:
+                    print(' ', end=' ')
                 else:
                     out = 0
-                    print(int(game.board[i][j]), end=" ")
+                    print(int(game.board[i][j]), end=' ')
             print()
         print()
 
