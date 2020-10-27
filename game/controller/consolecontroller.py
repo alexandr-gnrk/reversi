@@ -1,6 +1,5 @@
 from ..model.game import Game
-from ..model.consoleplayer import ConsolePlayer
-from ..model.aiplayer import AIPlayer
+from .player.consoleplayer import HumanPlayer, AIPlayer
 from .gamemode import GameMode
 import random
 import time
@@ -16,10 +15,10 @@ class ConsoleController():
     def create_players(self, gamemode):
         # create players depends on game mode
         if gamemode == GameMode.PLAYER_VS_PLAYER:
-            player1 = ConsolePlayer('Player1')
-            player2 = ConsolePlayer('Player2')
+            player1 = HumanPlayer('Player1')
+            player2 = HumanPlayer('Player2')
         elif gamemode == GameMode.PLAYER_VS_BOT:
-            player1 = ConsolePlayer('Player1')
+            player1 = HumanPlayer('Player1')
             player2 = AIPlayer('Player2')
         else:
             player1 = AIPlayer('Player1')
@@ -55,22 +54,15 @@ class ConsoleController():
         # game loop
         while True:
             # show prompt for input 
-            print('>>> ', end='', flush=True)
-            
-            # if it's AI player then make move
-            if not self.gamemodel.is_game_over and \
-                    isinstance(self.gamemodel.current_player, AIPlayer):
-                self.make_ai_move()
-                continue
+            print('Command: ', end='', flush=True)
 
             # get input and extract command and args
-            inp = input()    
-            command = inp.split()[0]
-            args = inp.split()[1:]
+            command = self.gamemodel.current_player.get_command()
 
             # make action that depends on command
             if command == 'move':
-                move = (int(args[0]), int(args[1]))
+                print('Enter pos: ', end='', flush=True)
+                move = self.gamemodel.current_player.get_move(self.gamemodel)
                 self.gamemodel.move(*move)
             elif command == 'restart':
                 gamemode = self.request_gamemode()
@@ -78,25 +70,5 @@ class ConsoleController():
                 self.gamemodel.start(*players)
             elif command == 'exit':
                 return
-
-
-    def make_move(self):
-        # get move coordinates and make movement
-        move = self.get_move_from_console()
-        self.gamemodel.move(*move)
-
-
-    def make_ai_move(self):
-        move = self.generate_move()
-        # imitate thinking of AI
-        time.sleep(1)
-        # type AI movement to console (for user view)
-        print('move', *move)
-        self.gamemodel.move(*move)
-
-
-    def generate_move(self):
-        # get list of available movements and choose random
-        moves = self.gamemodel.get_available_moves()
-        move = random.choice(moves)
-        return move
+            else:
+                print('Try again!')
