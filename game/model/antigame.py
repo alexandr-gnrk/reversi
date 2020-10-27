@@ -21,3 +21,12 @@ class AntiGame(Game):
         return super().is_cell_exist(i, j) and \
             self.board[i][j] != Cell.HOLE
             
+    def end_game(self):
+        # determine the winner
+        if self.current_player.get_point() < self.another_player.get_point():
+            self.winner = self.current_player
+        elif self.current_player.get_point() > self.another_player.get_point():
+            self.winner = self.another_player
+        
+        self.is_game_over = True
+        self.notify(GameEvent.GAME_OVER)
