@@ -32,8 +32,8 @@ class HumanPlayer(GUIPlayer):
         w, h = pygame.display.get_surface().get_size()
         # offset position to start of
         # game field
-        x = pos[0] - 0.2*w
-        y = pos[1] - 0.2*h
+        x = pos[1] - 0.2*h
+        y = pos[0] - 0.2*w
         # get single cell size on field
         cell_diff = 0.6*w/8
         # translate x, y to integer coordinates on the field 

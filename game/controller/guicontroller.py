@@ -3,16 +3,21 @@ import queue
 import threading
 
 from ..model.game import Game
+from ..model.antigame import AntiGame
 from .player.guiplayer import HumanPlayer, AIPlayer
 from .gamemode import GameMode
 
 
 class GUIController():
 
-    def __init__(self, screen, experimental=False):
+    def __init__(self, screen, black_hole=None, experimental=False):
         self.gamemode = None
         self.screen = screen
-        self.gamemodel = Game()
+        # set Anti-Reversi mode if black hole was passed
+        if black_hole:
+            self.gamemodel = AntiGame(black_hole)
+        else:
+            self.gamemodel = Game()
         self.is_exit = False
         self.experimental = experimental
         self.tracking = None
